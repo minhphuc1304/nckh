@@ -11,22 +11,25 @@ from lib.conv_layer import Conv, BNPReLU
 import math
 
 class CFPModule(nn.Module):
-    def __init__(self, nIn, d=1, KSize=3,dkSize=3):
+    def __init__(self, nIn, d=1, KSize=3,dkSize=3): # dkSize dilation kernel size
         super().__init__()
         
         self.bn_relu_1 = BNPReLU(nIn)
         self.bn_relu_2 = BNPReLU(nIn)
         self.conv1x1_1 = Conv(nIn, nIn // 4, KSize, 1, padding=1, bn_acti=True)
-        
+                            # M , 1 , M/4  => M/4 , 1 , M/4  
+                            
         self.dconv_4_1 = Conv(nIn //4, nIn //16, (dkSize,dkSize),1,padding = (1*d+1,1*d+1),
                             dilation=(d+1,d+1), groups = nIn //16, bn_acti=True)
-        
+                            # M/4 , 1 , M/16  => M/4 , 1 , M/16 
+                            
         self.dconv_4_2 = Conv(nIn //16, nIn //16, (dkSize,dkSize),1,padding = (1*d+1,1*d+1),
                             dilation=(d+1,d+1), groups = nIn //16, bn_acti=True)
-        
+                            # M/16 , 1 , M/16  => M/16 , 1 , M/16 
+                            
         self.dconv_4_3 = Conv(nIn //16, nIn //8, (dkSize,dkSize),1,padding = (1*d+1,1*d+1),
                             dilation=(d+1,d+1), groups = nIn //16, bn_acti=True)
-        
+                            
         
         
         self.dconv_1_1 = Conv(nIn //4, nIn //16, (dkSize,dkSize),1,padding = (1,1),
