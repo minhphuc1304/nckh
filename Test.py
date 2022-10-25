@@ -64,8 +64,4 @@ for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-Lar
         res = res.sigmoid().data.cpu().numpy().squeeze()
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
         
-        misc.imsave(save_path+name, res)
-
-
-# a[ousgfbwdow
-# d]
+        misc.imsave(save_path+name, res)]
