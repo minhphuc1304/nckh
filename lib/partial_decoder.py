@@ -18,12 +18,15 @@ class aggregation(nn.Module):
         self.relu = nn.ReLU(True)
 
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        # sclace_factor = 2 đầu ra đc nhanh lên 2 lần , mode bilinear : lấy các pixel giá trị lân cận để làm tiếp 
+        # align_corners không qtron
         self.conv_upsample1 = Conv(32, 32, 3,1, padding=1)
+        # input hình 32x32 bước nhảy = 1 , tạo ra padding ( vòng ngoài ) thêm 1 pixel
         self.conv_upsample2 = Conv(32, 32, 3,1, padding=1)
         self.conv_upsample3 = Conv(32, 32, 3,1, padding=1)
         self.conv_upsample4 = Conv(32, 32, 3,1, padding=1)
         self.conv_upsample5 = Conv(2*32, 2*32, 3,1, padding=1)
-
+        # input hinh sẽ *2 
         self.conv_concat2 = Conv(2*32, 2*32, 3,1, padding=1)
         self.conv_concat3 = Conv(3*32, 3*32, 3,1, padding=1)
         self.conv4 = Conv(3*32, 3*32, 3,1, padding=1)
@@ -45,3 +48,10 @@ class aggregation(nn.Module):
         x = self.conv5(x)
 
         return x
+    
+    
+    
+    # giải thích biến trong usample : https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html
+    # bên dưới là cách chạy của decoder
+    # chạy để output ra đc x : ở đây x là 
+    

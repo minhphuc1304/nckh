@@ -15,19 +15,20 @@ class PolypDataset(data.Dataset):
         self.trainsize = trainsize
         self.augmentations = augmentations
         print(self.augmentations)
-        self.images = [image_root + f for f in os.listdir(image_root) if f.endswith('.jpg') or f.endswith('.png')]
-        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.png')]
-        self.images = sorted(self.images)
-        self.gts = sorted(self.gts)
+        self.images = [image_root + f for f in os.listdir(image_root) if f.endswith('.jpg') or f.endswith('.png')] # load images 
+        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.png')] # load grounth truth
+        self.images = sorted(self.images) # sắp xếp lại image
+        self.gts = sorted(self.gts) # sắp xếp lại gtruth
         self.filter_files()
-        self.size = len(self.images)
+        self.size = len(self.images) # len() là hàm dùng để đếm số images để out ra size
         if self.augmentations == True:
             print('Using RandomRotation, RandomFlip')
             self.img_transform = transforms.Compose([
                 transforms.RandomRotation(90, resample=False, expand=False, center=None),
-                transforms.RandomVerticalFlip(p=0.5),
-                transforms.RandomHorizontalFlip(p=0.5),
-                transforms.Resize((self.trainsize, self.trainsize)),
+                # 90 = độ expand = False : trả về hình ảnh có cùng kích thước với hình ảnh đầu vào , center : tăm xoay của tấm ảnh ở tâm hình
+                transforms.RandomVerticalFlip(p=0.5), # lật ngược ảnh theo chiều dọc ( p = 0,5 hay p =1 ) thì cũng vậy
+                transforms.RandomHorizontalFlip(p=0.5),# lật ngược ảnh theo chiều ngang  ( p = 0,5 hay p =1 ) thì cũng vậy
+                transforms.Resize((self.trainsize, self.trainsize)), # thu nhỏ hình ảnh theo train size
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406],
                                      [0.229, 0.224, 0.225])])
@@ -152,3 +153,7 @@ class test_dataset:
         with open(path, 'rb') as f:
             img = Image.open(f)
             return img.convert('L')
+
+
+
+# https://pytorch.org/vision/stable/generated/torchvision.transforms.RandomRotation.html randomrotation

@@ -25,7 +25,7 @@ class CFPModule(nn.Module):
                             
         self.dconv_4_2 = Conv(nIn //16, nIn //16, (dkSize,dkSize),1,padding = (1*d+1,1*d+1),
                             dilation=(d+1,d+1), groups = nIn //16, bn_acti=True)
-                            # M/16 , 1 , M/16  => M/16 , 1 , M/16 
+                            # M/16 , 1 , M/16  => M/16 , 1 , M/16
                             
         self.dconv_4_3 = Conv(nIn //16, nIn //8, (dkSize,dkSize),1,padding = (1*d+1,1*d+1),
                             dilation=(d+1,d+1), groups = nIn //16, bn_acti=True)
@@ -34,7 +34,7 @@ class CFPModule(nn.Module):
         
         self.dconv_1_1 = Conv(nIn //4, nIn //16, (dkSize,dkSize),1,padding = (1,1),
                             dilation=(1,1), groups = nIn //16, bn_acti=True)
-        
+
         self.dconv_1_2 = Conv(nIn //16, nIn //16, (dkSize,dkSize),1,padding = (1,1),
                             dilation=(1,1), groups = nIn //16, bn_acti=True)
         

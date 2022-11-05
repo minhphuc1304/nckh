@@ -25,7 +25,7 @@ class AA_kernel(nn.Module):
         x = self.conv1(x)
 
         Hx = self.Hattn(x) # output về 1 mảng đc nén gồm batch size w h channel
-        Wx = self.Wattn(Hx)#  
+        Wx = self.Wattn(Hx)# 
 
         return Wx
     

@@ -28,7 +28,7 @@ class Conv(nn.Module):
         if self.bn_acti:
             output = self.bn_relu(output)
 
-        return output  
+        return output
     
     
 class BNPReLU(nn.Module):
