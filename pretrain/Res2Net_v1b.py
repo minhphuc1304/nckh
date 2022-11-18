@@ -36,32 +36,30 @@ class Bottle2neck(nn.Module):
         """
         super(Bottle2neck, self).__init__()
 
-        width = int(math.floor(planes * (baseWidth / 64.0)))
-        self.conv1 = nn.Conv2d(inplanes, width * scale,
-                               kernel_size=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(width * scale)
+        width = int(math.floor(planes * (baseWidth / 64.0))) # tính toán giá trị thực của width giá trị ( 6,7)
+        self.conv1 = nn.Conv2d(inplanes, width * scale, kernel_size=1, bias=False) # 
+        self.bn1 = nn.BatchNorm2d(width * scale) # chuẩn hóa dữ liệu 
 
-        if scale == 1:
+        if scale == 1: # nếu scale trả về 1 thì gắn nums =1 
             self.nums = 1
-        else:
+        else:   # chạy 4 lần
             self.nums = scale - 1
         if stype == 'stage':
             self.pool = nn.AvgPool2d(kernel_size=3, stride=stride, padding=1)
         convs = []
         bns = []
         for i in range(self.nums):
-            convs.append(nn.Conv2d(width, width, kernel_size=3,
-                         stride=stride, padding=1, bias=False))
-            bns.append(nn.BatchNorm2d(width))
-        self.convs = nn.ModuleList(convs)
+            convs.append(nn.Conv2d(width, width, kernel_size=3, 
+                         stride=stride, padding=1, bias=False))  # nối thêm phần tử vào 
+            bns.append(nn.BatchNorm2d(width))  # dùng append vì là mảng
+        self.convs = nn.ModuleList(convs)   # tạo module list ( module list là list như bth )
         self.bns = nn.ModuleList(bns)
 
-        self.conv3 = nn.Conv2d(width * scale, planes *
-                               self.expansion, kernel_size=1, bias=False)
+        self.conv3 = nn.Conv2d(width * scale  , planes * self.expansion, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
 
-        self.relu = nn.ReLU(inplace=True)
-        self.downsample = downsample
+        self.relu = nn.ReLU(inplace=True) # inplace = true để giảm bộ nhớ xún mức thấp nhất
+        self.downsample = downsample 
         self.stype = stype
         self.scale = scale
         self.width = width
@@ -109,7 +107,7 @@ class Res2Net(nn.Module):
         super(Res2Net, self).__init__()
         self.baseWidth = baseWidth
         self.scale = scale
-        self.conv1 = nn.Sequential(
+        self.conv1 = nn.Sequential (
             nn.Conv2d(3, 32, 3, 2, 1, bias=False),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
@@ -121,12 +119,14 @@ class Res2Net(nn.Module):
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU()
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1 = self._make_layer(block, 64, layers[0])
+        self.layer1 = self._make_layer(block, 64, layers[0]) 
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d(1)
+        # layer 0 -> 4 scale = 4 ;
         self.fc = nn.Linear(512 * block.expansion, num_classes)
+        # library s
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):

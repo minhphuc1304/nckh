@@ -20,8 +20,8 @@ class Conv(nn.Module):  # conv
                               stride=stride, padding=padding,
                               dilation=dilation, groups=groups, bias=bias)
 
-        if self.bn_acti:
-            self.bn_relu = BNPReLU(nOut)
+        if self.bn_acti: # nêu >0 chạy
+            self.bn_relu = BNPReLU(nOut) # lọc các giá trị <0
 
     def forward(self, input):
         output = self.conv(input)
@@ -29,14 +29,14 @@ class Conv(nn.Module):  # conv
         if self.bn_acti:
             output = self.bn_relu(output)
 
-        return output
+        return output # > 0 
 
 
 class BNPReLU(nn.Module):
     def __init__(self, nIn):
         super().__init__()
-        self.bn = nn.BatchNorm2d(nIn, eps=1e-3)
-        self.acti = nn.PReLU(nIn)
+        self.bn = nn.BatchNorm2d(nIn, eps=1e-3) # chuẩn hóa giá trị nhất có thể
+        self.acti = nn.PReLU(nIn) 
 
     def forward(self, input):
         output = self.bn(input)
@@ -45,3 +45,5 @@ class BNPReLU(nn.Module):
         return output
 
 # https://aicurious.io/posts/2019-09-23-cac-ham-kich-hoat-activation-function-trong-neural-networks/
+# batch_norm : https://www.phamduytung.com/blog/2022-02-25-normalization/
+# https://d2l.aivivn.com/chapter_convolutional-modern/batch-norm_vn.html

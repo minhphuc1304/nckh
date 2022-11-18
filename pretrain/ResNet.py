@@ -93,9 +93,9 @@ class ResNet(nn.Module):
         self.inplanes = 64
         super(ResNet, self).__init__()
 
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
-                               bias=False)
-        self.bn1 = nn.BatchNorm2d(64)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, # mo hinh 7x7 ,bước nhảy = 2 , padding thêm 3 ô bên ngoài
+                               bias=False) 
+        self.bn1 = nn.BatchNorm2d(64) 
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(Bottleneck, 64, 3)
@@ -103,7 +103,7 @@ class ResNet(nn.Module):
         self.layer3 = self._make_layer(Bottleneck, 256, 6, stride=2)
         self.layer4 = self._make_layer(Bottleneck, 512, 3, stride=2)
 
-        for m in self.modules():
+        for m in self.modules(): 
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
                 m.weight.data.normal_(0, math.sqrt(2. / n))

@@ -19,7 +19,8 @@ class self_attn(nn.Module):
 
         self.query_conv = Conv(in_channels, in_channels // 8, kSize=(1, 1),stride=1,padding=0) 
         # outchanel  = in /8 , kSize(1,1) nghĩa là tích chập 1 ô chiều dài lẫn rộng , stride = 1 mỗi lần di chuyển 1 pixel từ chỗ đã xử lý padding ko thêm
-        # in_channels /8 là để chia nhỏ input channels để phân giải nhiều hơn
+        """_summary_
+        """        # in_channels /8 là để chia nhỏ input channels để phân giải nhiều hơn
         # tại sao lại phải chia outchannel làm 8
         self.key_conv = Conv(in_channels, in_channels // 8, kSize=(1, 1),stride=1,padding=0)
         self.value_conv = Conv(in_channels, in_channels, kSize=(1, 1),stride=1,padding=0)
