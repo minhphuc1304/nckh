@@ -9,19 +9,20 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Conv(nn.Module):
+
+class Conv(nn.Module):  # conv
     def __init__(self, nIn, nOut, kSize, stride, padding, dilation=(1, 1), groups=1, bn_acti=False, bias=False):
         super().__init__()
-        
+
         self.bn_acti = bn_acti
-        
-        self.conv = nn.Conv2d(nIn, nOut, kernel_size = kSize,
+
+        self.conv = nn.Conv2d(nIn, nOut, kernel_size=kSize,
                               stride=stride, padding=padding,
-                              dilation=dilation,groups=groups,bias=bias)
-        
+                              dilation=dilation, groups=groups, bias=bias)
+
         if self.bn_acti:
             self.bn_relu = BNPReLU(nOut)
-            
+
     def forward(self, input):
         output = self.conv(input)
 
@@ -29,8 +30,8 @@ class Conv(nn.Module):
             output = self.bn_relu(output)
 
         return output
-    
-    
+
+
 class BNPReLU(nn.Module):
     def __init__(self, nIn):
         super().__init__()
@@ -40,5 +41,7 @@ class BNPReLU(nn.Module):
     def forward(self, input):
         output = self.bn(input)
         output = self.acti(output)
-        
+
         return output
+
+# https://aicurious.io/posts/2019-09-23-cac-ham-kich-hoat-activation-function-trong-neural-networks/

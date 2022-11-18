@@ -11,7 +11,8 @@ import torch.utils.model_zoo as model_zoo
 import torch
 import torch.nn.functional as F
 
-__all__ = ['Res2Net', 'res2net50_v1b', 'res2net101_v1b', 'res2net50_v1b_26w_4s']
+__all__ = ['Res2Net', 'res2net50_v1b',
+           'res2net101_v1b', 'res2net50_v1b_26w_4s']
 
 model_urls = {
     'res2net50_v1b_26w_4s': 'https://shanghuagao.oss-cn-beijing.aliyuncs.com/res2net/res2net50_v1b_26w_4s-3cf99910.pth',
@@ -36,7 +37,8 @@ class Bottle2neck(nn.Module):
         super(Bottle2neck, self).__init__()
 
         width = int(math.floor(planes * (baseWidth / 64.0)))
-        self.conv1 = nn.Conv2d(inplanes, width * scale, kernel_size=1, bias=False)
+        self.conv1 = nn.Conv2d(inplanes, width * scale,
+                               kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(width * scale)
 
         if scale == 1:
@@ -48,12 +50,14 @@ class Bottle2neck(nn.Module):
         convs = []
         bns = []
         for i in range(self.nums):
-            convs.append(nn.Conv2d(width, width, kernel_size=3, stride=stride, padding=1, bias=False))
+            convs.append(nn.Conv2d(width, width, kernel_size=3,
+                         stride=stride, padding=1, bias=False))
             bns.append(nn.BatchNorm2d(width))
         self.convs = nn.ModuleList(convs)
         self.bns = nn.ModuleList(bns)
 
-        self.conv3 = nn.Conv2d(width * scale, planes * self.expansion, kernel_size=1, bias=False)
+        self.conv3 = nn.Conv2d(width * scale, planes *
+                               self.expansion, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
 
         self.relu = nn.ReLU(inplace=True)
@@ -126,7 +130,8 @@ class Res2Net(nn.Module):
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                nn.init.kaiming_normal_(
+                    m.weight, mode='fan_out', nonlinearity='relu')
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
@@ -147,7 +152,8 @@ class Res2Net(nn.Module):
                             stype='stage', baseWidth=self.baseWidth, scale=self.scale))
         self.inplanes = planes * block.expansion
         for i in range(1, blocks):
-            layers.append(block(self.inplanes, planes, baseWidth=self.baseWidth, scale=self.scale))
+            layers.append(block(self.inplanes, planes,
+                          baseWidth=self.baseWidth, scale=self.scale))
 
         return nn.Sequential(*layers)
 
@@ -177,7 +183,8 @@ def res2net50_v1b(pretrained=False, **kwargs):
     """
     model = Res2Net(Bottle2neck, [3, 4, 6, 3], baseWidth=26, scale=4, **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['res2net50_v1b_26w_4s']))
+        model.load_state_dict(model_zoo.load_url(
+            model_urls['res2net50_v1b_26w_4s']))
     return model
 
 
@@ -186,9 +193,11 @@ def res2net101_v1b(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a lib pre-trained on ImageNet
     """
-    model = Res2Net(Bottle2neck, [3, 4, 23, 3], baseWidth=26, scale=4, **kwargs)
+    model = Res2Net(Bottle2neck, [3, 4, 23, 3],
+                    baseWidth=26, scale=4, **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['res2net101_v1b_26w_4s']))
+        model.load_state_dict(model_zoo.load_url(
+            model_urls['res2net101_v1b_26w_4s']))
     return model
 
 
@@ -199,7 +208,8 @@ def res2net50_v1b_26w_4s(pretrained=False, **kwargs):
     """
     model = Res2Net(Bottle2neck, [3, 4, 6, 3], baseWidth=26, scale=4, **kwargs)
     if pretrained:
-        model_state = torch.load('D:/HarDNet-MSEG-master/res2net50_v1b_26w_4s-3cf99910.pth')
+        model_state = torch.load(
+            'D:/HarDNet-MSEG-master/res2net50_v1b_26w_4s-3cf99910.pth')
         model.load_state_dict(model_state)
         # lib.load_state_dict(model_zoo.load_url(model_urls['res2net50_v1b_26w_4s']))
     return model
@@ -210,9 +220,11 @@ def res2net101_v1b_26w_4s(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a lib pre-trained on ImageNet
     """
-    model = Res2Net(Bottle2neck, [3, 4, 23, 3], baseWidth=26, scale=4, **kwargs)
+    model = Res2Net(Bottle2neck, [3, 4, 23, 3],
+                    baseWidth=26, scale=4, **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['res2net101_v1b_26w_4s']))
+        model.load_state_dict(model_zoo.load_url(
+            model_urls['res2net101_v1b_26w_4s']))
     return model
 
 
@@ -221,9 +233,11 @@ def res2net152_v1b_26w_4s(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a lib pre-trained on ImageNet
     """
-    model = Res2Net(Bottle2neck, [3, 8, 36, 3], baseWidth=26, scale=4, **kwargs)
+    model = Res2Net(Bottle2neck, [3, 8, 36, 3],
+                    baseWidth=26, scale=4, **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['res2net152_v1b_26w_4s']))
+        model.load_state_dict(model_zoo.load_url(
+            model_urls['res2net152_v1b_26w_4s']))
     return model
 
 
