@@ -45,21 +45,21 @@ class Bottle2neck(nn.Module):
         else:   # chạy 4 lần
             self.nums = scale - 1
         if stype == 'stage':
-            self.pool = nn.AvgPool2d(kernel_size=3, stride=stride, padding=1)
+            self.pool = nn.AvgPool2d(kernel_size=3, stride=stride, padding=1) # mask 3x3 bước nhảy kế thừa , thêm 1 pixel padding
         convs = []
         bns = []
         for i in range(self.nums):
             convs.append(nn.Conv2d(width, width, kernel_size=3, 
-                         stride=stride, padding=1, bias=False))  # nối thêm phần tử vào 
+                         stride=stride, padding=1, bias=False))  # nối thêm phần tử vào mảng
             bns.append(nn.BatchNorm2d(width))  # dùng append vì là mảng
-        self.convs = nn.ModuleList(convs)   # tạo module list ( module list là list như bth )
+        self.convs = nn.ModuleList(convs)   # tạo module list
         self.bns = nn.ModuleList(bns)
 
         self.conv3 = nn.Conv2d(width * scale  , planes * self.expansion, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
 
         self.relu = nn.ReLU(inplace=True) # inplace = true để giảm bộ nhớ xún mức thấp nhất
-        self.downsample = downsample 
+        self.downsample = downsample
         self.stype = stype
         self.scale = scale
         self.width = width
@@ -67,11 +67,11 @@ class Bottle2neck(nn.Module):
     def forward(self, x):
         residual = x
 
-        out = self.conv1(x)
-        out = self.bn1(out)
+        out = self.conv1(x) # chạy conv1 ở trên
+        out = self.bn1(out) # bước chuẩn hóa 
         out = self.relu(out)
 
-        spx = torch.split(out, self.width, 1)
+        spx = torch.split(out, self.width, 1) # split dùng để chia các tensor thành khối 
         for i in range(self.nums):
             if i == 0 or self.stype == 'stage':
                 sp = spx[i]
